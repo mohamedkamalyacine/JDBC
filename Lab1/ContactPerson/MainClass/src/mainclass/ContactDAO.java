@@ -7,21 +7,20 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ContactDAO {
+
     private String DRIVER = "com.mysql.cj.jdbc.Driver";
     private String DBURL = "jdbc:mysql://localhost:3306/addressbook";
     private String USER = "root";
     private String PASSWORD = "12345";
     private boolean isConnected = false;
     private Connection con;
-    
-    private boolean connect()
-    {
+
+    private boolean connect() {
         try {
             Class.forName(DRIVER);
             con = DriverManager.getConnection(DBURL, USER, PASSWORD);
-            
-            if(con != null)
-            {
+
+            if (con != null) {
                 isConnected = true;
                 return true;
             }
@@ -31,22 +30,20 @@ public class ContactDAO {
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ContactDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return false;
     }
-    
-    public List<ContactPerson> getContacts()
-    {
+
+    public List<ContactPerson> getContacts() {
         String sqlStatement = "select * from contact";
         List<ContactPerson> contactsList = new ArrayList<>();
-        
+
         try {
-            if(connect())
-            {
+            if (connect()) {
                 Statement stmt = con.createStatement();
                 ResultSet rs = stmt.executeQuery(sqlStatement);
                 //System.out.println(rs.getString("name"));
-                while (rs.next()){
+                while (rs.next()) {
                     ContactPerson p = createContactPerson(rs);
                     contactsList.add(p);
                 }
@@ -54,15 +51,14 @@ public class ContactDAO {
                 stmt.close();
                 //con.close();
             }
-        }catch (SQLException ex){
+        } catch (SQLException ex) {
             ex.printStackTrace();
         }
         //con.close();
         return contactsList;
     }
-    
-    private ContactPerson createContactPerson(ResultSet rs)
-    {
+
+    private ContactPerson createContactPerson(ResultSet rs) {
         ContactPerson p = new ContactPerson();
         try {
             p.setId(rs.getInt("id"));
@@ -75,18 +71,41 @@ public class ContactDAO {
             p.setEmail(rs.getString("email"));
             p.setBirthDate(rs.getString("web_site"));
             p.setProfession(rs.getString("profession"));
-        }catch(SQLException ex){
+        } catch (SQLException ex) {
             ex.printStackTrace();
         }
         return p;
     }
-    
-    public void closeConn()
-    {
-        try{
+
+    public void insertData(ContactPerson p) {
+        if (connect()) {
+            try {
+                String query = "INSERT INTO contact(id, name, nick_name, address, home_phone, work_phone, cell_phone, email, birthday, web_site, profession) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+                PreparedStatement pstmt = con.prepareStatement(query);
+                pstmt.setInt(1, p.getId());
+                pstmt.setString(2, p.getName());
+                pstmt.setString(3, p.getNickName());
+                pstmt.setString(4, p.getAddress());
+                pstmt.setString(5, p.getHomePhone());
+                pstmt.setString(6, p.getWorkPhone());
+                pstmt.setString(7, p.getCellPhone());
+                pstmt.setString(8, p.getEmail());
+                pstmt.setString(9, p.getBirthDate());
+                pstmt.setString(10, p.getWebSite());
+                pstmt.setString(11, p.getProfession());
+
+                pstmt.execute();
+            } catch (SQLException ex) {
+                Logger.getLogger(ContactDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    public void closeConn() {
+        try {
             con.close();
             isConnected = false;
-        }catch(SQLException ex){
+        } catch (SQLException ex) {
             Logger.getLogger(ContactDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

@@ -63,8 +63,8 @@ public class ContactDAO {
         try {
             p.setId(rs.getInt("id"));
             p.setName(rs.getString("name"));
-            p.setNickName("nick_name");
-            p.setAddress("address");
+            p.setNickName(rs.getString("nick_name"));
+            p.setAddress(rs.getString("address"));
             p.setHomePhone(rs.getString("home_phone"));
             p.setWorkPhone(rs.getString("work_phone"));
             p.setCellPhone(rs.getString("cell_phone"));
@@ -93,14 +93,53 @@ public class ContactDAO {
                 pstmt.setString(9, p.getBirthDate());
                 pstmt.setString(10, p.getWebSite());
                 pstmt.setString(11, p.getProfession());
-
+                
                 pstmt.execute();
             } catch (SQLException ex) {
-                Logger.getLogger(ContactDAO.class.getName()).log(Level.SEVERE, null, ex);
+                ex.printStackTrace();
+                //Logger.getLogger(ContactDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
-
+    
+    public void updateData(String updatedVal, int id){
+        if(connect()){
+            try{
+                String query = "UPDATE contact "
+                             + "SET address=? "
+                             + "WHERE id=?";
+                
+                PreparedStatement pstmt = con.prepareStatement(query);
+                pstmt.setString(1, updatedVal);
+                pstmt.setInt(2, id);
+                pstmt.execute();
+                
+                //ResultSet rs = pstmt.executeQuery();
+                
+            }catch(SQLException ex){
+                ex.printStackTrace();
+            }
+        }
+    }
+    
+    public void deleteData(int id){
+        if(connect()){
+            try{
+                String query = "DELETE FROM contact "
+                             + "WHERE id=?";
+                
+                PreparedStatement pstmt = con.prepareStatement(query);
+                pstmt.setInt(1, id);
+                pstmt.execute();
+                
+                //ResultSet rs = pstmt.executeQuery();
+                
+            }catch(SQLException ex){
+                ex.printStackTrace();
+            }
+        }
+    }
+    
     public void closeConn() {
         try {
             con.close();

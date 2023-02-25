@@ -100,4 +100,5 @@ public class ContactPerson {
     public String getProfession() {
         return profession;
     }
+    
 }

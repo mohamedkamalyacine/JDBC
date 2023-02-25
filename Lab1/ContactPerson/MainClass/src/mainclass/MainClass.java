@@ -1,12 +1,9 @@
 package mainclass;
 
-//import java.sql.*;
-
 public class MainClass {
 
     public static void main(String[] args) {
         ContactPerson p = new ContactPerson();
-        
         /*p.setId(3);
         p.setName("Mohsen Ali");
         p.setNickName("Moha");
@@ -21,18 +18,21 @@ public class MainClass {
         ContactDAO testDB = new ContactDAO();
         
         //testDB.insertData(p);
-        
         testDB.getContacts().forEach((s)->{
-            System.out.println(s.getId() + " " + s.getName() + " " + s.getNickName() + " " + s.getEmail());
+            System.out.println(s.getId() + " " + s.getName() + " "
+                             + s.getNickName() + " " + s.getAddress() + " "
+                             + s.getHomePhone() + " " + s.getWorkPhone() + " "
+                             + s.getCellPhone() + " " + s.getEmail() + " "
+                             + s.getBirthDate() + " " + s.getWebSite() + " "
+                             + s.getProfession());
         });
-        
+
         testDB.updateData("Luxor", 1);
         testDB.getContacts().forEach((s)->{
             System.out.println(s.getId() + " " + s.getName() + " " + s.getAddress());
         });
         
         testDB.deleteData(3);
-        
         testDB.getContacts().forEach((s)->{
             System.out.println(s.getId() + " " + s.getName() + " " + s.getAddress());
         });
